@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import SearchBarComponent from './searchBar';
-import Table from './table';
-import { employees } from './data';
+import { useState, useEffect } from 'react';
+import SearchBarComponent from '../src/SearchBar/searchBar';
+import { apiClient } from './apiClient';
 
 const filterOptions = [
   {label: 'First Name (A-Z)', value: 'firstName'},
@@ -14,7 +13,15 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
 
-  const filteredData = employees
+  useEffect(() => {
+    const getAllEmployees = async() => {
+      const employees = await apiClient.get('/employees')
+      console.log('employees', employees)
+    }
+    getAllEmployees()
+  }, [])
+
+  const filteredData = []
     .filter(item => {
       if (!searchTerm.trim()) return true;
       return `${item.firstName} ${item.surname}`
